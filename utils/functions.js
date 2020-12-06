@@ -131,7 +131,6 @@ module.exports = {
   setUserRep,
   addUserRep,
   getUserRep,
-  remUserRep,
   timer,
   time
 };
