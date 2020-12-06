@@ -1,6 +1,7 @@
 {
     "token": "Токен бота",
     "prefix": "Префикс",
+    "openWeatherMapKey": "Сюда ключ",
     "AlexFlipNoteKey": "AlexFlipNote API ключ",
     "Xaliks": "Оставьте тут свой ID (не обращайте внимание на Xaliks))",
 

@@ -1,12 +1,12 @@
-const { prefix } = require('../config.json')
+const { Xaliks } = require('../config.json')
 
 module.exports = {
     name: "ready",
     execute(bot) {
     console.log(`Залогинился как ${bot.user.tag}!`);
     const statuses = [
-        `${prefix}help`,
-        `By (ваш тег))`
+        `/help`,
+        `By ${bot.users.cache.get(Xaliks).tag}`
     ];
     setInterval(() => {
         const status = statuses[Math.floor(Math.random() * statuses.length)];
