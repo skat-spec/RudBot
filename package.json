@@ -1,7 +1,7 @@
 {
   "name": "rudbot3256",
-  "version": "1.0.4",
-  "description": "Бот для сервера Руды",
+  "version": "1.0.0",
+  "description": "Просто РудБот",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
@@ -16,10 +16,8 @@
     "cheerio": "^1.0.0-rc.3",
     "cpu-stat": "^2.0.1",
     "discord.js": "^12.5.0",
-    "figlet": "^1.5.0",
     "fs": "0.0.1-security",
     "hastebin-gen": "^2.0.5",
-    "mee6-levels-api": "^1.1.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "moment-timezone": "^0.5.31",
@@ -31,7 +29,6 @@
     "request": "^2.88.2",
     "strftime": "^0.10.0",
     "string-progressbar": "^1.0.1",
-    "text-to-mp3": "^1.0.4",
     "util": "^0.12.3"
   }
 }
