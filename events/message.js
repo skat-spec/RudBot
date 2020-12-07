@@ -31,6 +31,7 @@ const time = (time) => {
  module.exports = {
     name: "message",
     async execute(bot, message) {
+        if(!message.guild) return;
         const prefix = (await getServerPrefix(message.guild.id)) || cfg.prefix;
         const serverPrefix = await getServerPrefix(message.guild.id)
         const blacklistedUsers = await getBlacklistUsers();
@@ -40,6 +41,7 @@ const time = (time) => {
         const cooldowns = bot.cooldowns;
         const commandName = args.shift().toLowerCase();
         const command = bot.commands.get(commandName) || bot.commands.get(bot.aliases.get(commandName));
+        if (message.content === `<@!${bot.user.id}>`) return message.channel.send(`Префикс на этом сервере: \`${prefix}\``);
         if (
             message.channel.type === "dm" 
             || !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")
@@ -55,7 +57,6 @@ const time = (time) => {
         const cooldownAmount = (command.cooldown || 3) * 1000;
         if (userRep === null || !userRep) setUserRep(message.guild.id, userId, 0);
         if (serverPrefix === null || !serverPrefix) setServerPrefix(message.guild.id, cfg.prefix);
-        if (message.content === `<@!${bot.user.id}>`) return message.channel.send(`Префикс на этом сервере: \`${getServerPrefix(message.guild.id)}\``);
         if (command.args && !args.length) {
             let err = 'Недостаточно аргументов!'
             if(command.usage) err += `\nПравильное использование команды: \`${prefix}${command.name} ${command.usage}\``

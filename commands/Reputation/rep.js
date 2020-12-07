@@ -1,5 +1,3 @@
-//дада....
-
 const {
     getUserRep,
     setUserRep,
@@ -20,14 +18,8 @@ module.exports = {
         const user =
         message.guild.members.cache.get(args[0]) ||
         message.mentions.members.first()
-        if(!user) {
-            message.channel.send(error('Пользователь не найден!'))
-            bot.cooldowns.get(this.name).delete(message.author.id)
-        return}
-        if(user.user.bot) {
-            message.channel.send(error('Это бот. Зачем?'))
-            bot.cooldowns.get(this.name).delete(message.author.id)
-        return}
+        if(!user) return message.channel.send(error('Пользователь не найден!'))
+        if(user.user.bot) return message.channel.send(error('Это бот. Зачем?'))
 
         const e1 = message.guild.id
         const e2 = user.id
@@ -36,7 +28,7 @@ module.exports = {
         .setDescription(`У ${user} \`${getUserRep(e1, e2) || '0'}\` репутации.`))
         else if(user.id === message.author.id) {
             message.channel.send(error('Вы не можете выдать себе репутацию'))
-            bot.cooldowns.get(this.name).delete(message.author.id)
+             
         return}
 
         const userRep = await getUserRep(e1, e2);
