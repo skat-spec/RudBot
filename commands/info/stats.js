@@ -41,6 +41,7 @@ const embed = new MessageEmbed()
     **Версия Discord.js:** \`${version}\`
     **Операционная система:** \`${os.type()} / ${os.arch()}\``
 )
+.addField('Репозиторий с говно-кодом', '[GitHub](https://github.com/Xaliks/RudBot)', true)
 .setFooter(`Аптайм: ${duration}`)
 .setThumbnail(bot.user.displayAvatarURL())
 
