@@ -27,4 +27,4 @@ module.exports = {
           .setDescription(`[Скачать скин](${skin})`)
           .setImage(full));
   },
-};
+}
