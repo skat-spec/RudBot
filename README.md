@@ -9,5 +9,5 @@
 3. npm install
 4. Переименуйте config.json.example на config.json
 5. Заполните его ^
-6. node bot.js
+6. npm start
 7. Если не работает эта какашка, то пишите мне в лс в дискорде (Xaliks#5991) либо в вк (vk.com/xaliksss)

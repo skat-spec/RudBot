@@ -1,5 +1,7 @@
 const hastebin = require('hastebin-gen')
-const { MessageEmbed } = require('discord.js')
+const {
+    MessageEmbed
+} = require('discord.js')
 
 module.exports = {
     name: 'hastebin',
@@ -10,13 +12,15 @@ module.exports = {
     args: true,
     category: 'cmds',
     execute(message, args) {
-        hastebin(args.join(' '), { extension: "txt" }).then(haste => {
+        hastebin(args.join(' '), {
+            extension: "txt"
+        }).then(haste => {
 
             message.channel.send(new MessageEmbed()
-            .setTitle(`Ваша ссылка: ${haste}`));
+                .setTitle(`Ваша ссылка: ${haste}`));
         }).catch(error => {
             message.channel.send(`Произошла ошибка: \n\n\`\`\`${error}\`\`\``);
         });
 
     }
-  }
+}

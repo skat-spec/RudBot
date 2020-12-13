@@ -1,5 +1,9 @@
-﻿const { MessageEmbed } = require('discord.js');
-const { emoji } = require('../../config.json')
+﻿const {
+    MessageEmbed
+} = require('discord.js');
+const {
+    emoji
+} = require('../../config.json')
 
 module.exports = {
     name: 'ping',
@@ -18,10 +22,10 @@ module.exports = {
         if(bot.ws.ping >= 900) discordemoji = emoji.dnd
 
         message.channel.send(new MessageEmbed()
-        .setColor("303136")
-        .setTitle('Пинг')
-        .setDescription(`Ответ на команды: ${stat}${ping}ms
-Пинг: ${discordemoji}${bot.ws.ping}ms`)
-        .setTimestamp())
+            .setColor("303136")
+            .setTitle('Пинг')
+            .setDescription(`Ответ на команды: ${stat}${ping}ms
+WS Пинг: ${discordemoji}${bot.ws.ping}ms`)
+            .setTimestamp())
     },
 }

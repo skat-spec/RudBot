@@ -1,4 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -11,8 +13,8 @@ module.exports = {
         const data = await fetch("https://miss.perssbest.repl.co/api/v2/meme").then(res => res.json());
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setImage(`${data.image}`)
-        .setTimestamp());
+            .setFooter(message.author.username)
+            .setImage(`${data.image}`)
+            .setTimestamp());
     }
 };
