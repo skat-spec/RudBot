@@ -12,8 +12,9 @@ module.exports = {
     category: 'info',
     aliases: ['ковид'],
     async execute(message, args) {
-        let country = args[0]
-        let data = await fetch("https://disease.sh/v3/covid-19/countries/" + country).then(res => res.json());
+        let country = args.join(' ')
+        let data = await fetch("https://disease.sh/v3/covid-19/countries/" + encodeURIComponent(
+     country)).then(res => res.json());
         if(!country) data = await fetch("https://disease.sh/v3/covid-19/all").then(res => res.json());
         if(data.message) return message.channel.send(error('Страна не найдена!'))
 
