@@ -72,7 +72,7 @@ module.exports = {
 
 Участников **${message.guild.memberCount}**
 :bust_in_silhouette: Пользователей: **${message.guild.members.cache.filter(m => !m.user.bot).size}**
-<:BOT:754080028496756969> Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
+Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
 ${emoji.online} Онлайн: **${online}**
 ${emoji.offline} Оффлайн: **${offline}**
 ${emoji.idle} Не актив: **${idle}**
@@ -80,7 +80,7 @@ ${emoji.dnd} Не беспокоить: **${dnd}**
 
 :books: Кол-во категорий: **${categories}**
 :page_facing_up: Кол-во текст. каналов **${message.guild.channels.cache.filter(c => c.type === 'text').size}**
-<:voice:754264368920657930> Кол-во гол. каналов: **${gchannels}**
+Кол-во гол. каналов: **${gchannels}**
 AFK канал | Тайм-аут: ${afk}
 
 Дата создания: **${formatDate(new Date(message.guild.createdTimestamp))}**\n(**${timer(parseInt(ms(diff1).match(/\d+/)), ['день', 'дня', 'дней'])} назад**)
@@ -91,7 +91,7 @@ AFK канал | Тайм-аут: ${afk}
                 dynamic: true
             }))
         if(message.guild.premiumSubscriptionCount > 0) {
-            embed.addField(`Буст`, `<a:Boost:754262189879066644> Уровень буста: **${message.guild.premiumTier}**\n<a:Boosted:754262195906543628> Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
+            embed.addField(`Буст`, `Уровень буста: **${message.guild.premiumTier}**\nКол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
         }
 
         if(message.guild.features[0]) {
