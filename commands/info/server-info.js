@@ -72,7 +72,7 @@ module.exports = {
 
 Участников **${message.guild.memberCount}**
 :bust_in_silhouette: Пользователей: **${message.guild.members.cache.filter(m => !m.user.bot).size}**
-Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
+<:BOT:754080028496756969> Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
 ${emoji.online} Онлайн: **${online}**
 ${emoji.offline} Оффлайн: **${offline}**
 ${emoji.idle} Не актив: **${idle}**
@@ -91,7 +91,7 @@ AFK канал | Тайм-аут: ${afk}
                 dynamic: true
             }))
         if(message.guild.premiumSubscriptionCount > 0) {
-            embed.addField(`Буст`, `Уровень буста: **${message.guild.premiumTier}**\nКол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
+            embed.addField(`Буст`, `<a:Boost:754262189879066644> Уровень буста: **${message.guild.premiumTier}**\n<a:Boosted:754262195906543628> Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
         }
 
         if(message.guild.features[0]) {

@@ -9,6 +9,7 @@ const {
 const {
     Xaliks
 } = require('../../config.json')
+const db = require('quick.db')
 const {
     mem,
     cpu,
@@ -29,7 +30,6 @@ module.exports = {
         var ping = Date.now() - message.createdTimestamp
         const duration = time(bot.uptime)
         let createdAt = formatDate(bot.user.createdAt);
-        //шото вроде шардов
         let servers = await bot.shard.broadcastEval('this.guilds.cache.size')
         let users = await bot.shard.broadcastEval('this.users.cache.size')
         let call = await bot.shard.broadcastEval('this.channels.cache.size')
@@ -53,11 +53,13 @@ module.exports = {
 **WS пинг:** \`${Math.round(bot.ws.ping)}\`ms
 <:CPU:756151041346764871>**Использование CPU:** \`${await cpu.usage()}%\`
 **Кол-во ядер:** \`${cpu.count()}\`
-**Использование ОЗУ:** \`${usedMemMb.toFixed(0)}\`MB / \`${(totalMemMb).toFixed(0)}\`MB
-**Версия Node.js:** \`${process.version}\`
-**Версия Discord.js:** \`${version}\`
-**Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
-            .addField('Репозиторий', 'https://github.com/Xaliks/RudBot', true)
+<:RAM:751103280033038498>**Использование ОЗУ:** \`${usedMemMb.toFixed(0)}\`MB / \`${(totalMemMb).toFixed(0)}\`MB
+<:nodejs:751109861239947264>**Версия Node.js:** \`${process.version}\`
+<:djs:751109146903838780>**Версия Discord.js:** \`${version}\`
+<:os:751122631905902642>**Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
+            .addField('Обратотка', `Обработано команд: \`${db.fetch('commands')}\`
+Прочтено сообщений: \`${db.fetch('messages')}\``)
+            .addField('Репозиторий с говно-кодом', 'https://github.com/Xaliks/RudBot', true)
             .setFooter(`Аптайм: ${duration}`)
             .setThumbnail(bot.user.displayAvatarURL())
 

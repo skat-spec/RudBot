@@ -30,12 +30,12 @@ const time = (time) => {
 module.exports = {
     name: "message",
     async execute(bot, message) {
-        if(!message.guild) return;
-        const prefix = (await getServerPrefix(message.guild.id)) || cfg.prefix;
-        const serverPrefix = await getServerPrefix(message.guild.id)
+        const guildId = message.guild.id
+        const prefix = (await getServerPrefix(guildId)) || cfg.prefix;
+        const serverPrefix = await getServerPrefix(guildId)
         const blacklistedUsers = await getBlacklistUsers();
         const userId = message.author.id;
-        const userRep = await getUserRep(message.guild.id, userId);
+        const userRep = await getUserRep(guildId, userId);
         const args = message.content.slice(prefix.length).trim().split(/ +/g);
         const cooldowns = bot.cooldowns;
         const commandName = args.shift().toLowerCase();
@@ -54,8 +54,8 @@ module.exports = {
         if(bot.commands.has(command?.name)) {
             const timestamps = cooldowns.get(command.name);
             const cooldownAmount = (command.cooldown || 3) * 1000;
-            if(userRep === null || !userRep) setUserRep(message.guild.id, userId, 0);
-            if(serverPrefix === null || !serverPrefix) setServerPrefix(message.guild.id, cfg.prefix);
+            if(userRep === null || !userRep) setUserRep(guildId, userId, 0);
+            if(serverPrefix === null || !serverPrefix) setServerPrefix(guildId, cfg.prefix);
             if(command.args && !args.length) {
                 let err = 'Недостаточно аргументов!'
                 if(command.usage) err += `\nПравильное использование команды: \`${prefix}${command.name} ${command.usage}\``
@@ -78,10 +78,8 @@ module.exports = {
         }
         
         //ЧС
-        if(blacklistedUsers !== null) {
-            let isBlacklisted = blacklistedUsers.filter(u => u.user?.id === message.author.id)[0];
-            if(isBlacklisted && !message.content.startsWith('/идея')) return message.react(emojiId.error)
-        }
+        let isBlacklisted = blacklistedUsers.filter(u => u.user?.id === message.author.id)[0];
+        if(blacklistedUsers !== null || isBlacklisted) return message.react(emojiId.error)
         
         try {
             command.execute(message, args, bot);

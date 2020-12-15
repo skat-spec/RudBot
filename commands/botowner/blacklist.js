@@ -1,87 +1,85 @@
 const {
-  addBlacklistUser,
-  getBlacklistUsers,
-  setBlacklistUsers,
+    addBlacklistUser,
+    getBlacklistUsers,
+    setBlacklistUsers,
+    error
 } = require("../../utils/functions");
 const {
-  MessageEmbed
-} = require("discord.js");
+    Xaliks
+} = require('../../config.json')
 
 module.exports = {
-  name: "blacklist",
-  category: "botowner",
-  aliases: ['чс', '4c'],
-  admin: true,
-  async execute(message, args, bot) {
-      const levels = ["1", "2"];
-      const type = args[0];
-      const level = args[1];
-      const user =
-          bot.users.cache.find((user) => user.id === args[2]) ||
-          message.mentions.users.first();
+    name: "blacklist",
+    category: "botowner",
+    usage: ['<add/view/remove> <ID>'],
+    args: true,
+    aliases: ['чс', '4c'],
+    async execute(message, args, bot) {
+        if(message.author.id != Xaliks && message.author.id != '637309157997019136') return;
+        const type = args[0];
+        const reason = args.slice(2).join(' ')
+        const user =
+            bot.users.cache.find((user) => user.id === args[1]) ||
+            message.mentions.users.first();
 
-      if(!args[0]) {
-          return message.channel.send("<тип (add/remove/view)> <уровень (хз зач)> <юзер/ID>");
-      }
+        if(!type) return message.channel.send("add/remove/view");
 
-      const users = await getBlacklistUsers();
+        if(!user) return message.channel.send("Ну да ну да... а кого в чс кидать то будем?")
 
-      switch (type) {
-          case "view":
-              const usr =
-                  users !== null && users.filter((u) => u.user?.id === user.id)[0];
+        if(!args[2] && type === 'add') return message.channel.send("А причину кто писать будет?");
 
-              if(!usr) {
-                  return message.channel.send("Не в ЧС");
-              }
+        if(user?.id === Xaliks && type === 'add') return message.channel.send(error('Ты че, попутал?'))
 
-              const embed = new MessageEmbed()
-                  .setTitle(`Статус: ${usr.user.username}`)
-                  .setTimestamp()
-                  .addField("Лвл", usr.level ? usr.level : "0");
+        const users = await getBlacklistUsers();
 
-              return message.channel.send({
-                  embed
-              });
-          case "add":
-              if(!levels.includes(level)) {
-                  return message.channel.send("может быть онли **1** or **2**");
-              }
-              if(users === null) {
-                  return setBlacklistUsers([user]);
-              }
-              const existing =
-                  users !== null && users.filter((u) => u.user?.id === user.id)[0];
-              if(existing) {
-                  return message.channel.send(`${user.tag} уже в ЧС`);
-              }
+        switch (type) {
+            case "view":
+                const usr =
+                    users !== null && users.filter((u) => u.user?.id === user.id)[0];
 
-              addBlacklistUser({
-                  user,
-                  level
-              });
-              break;
-          case "remove":
-              if(users === null) {
-                  return message.channel.send(`${user.tag} не в ЧС`);
-              }
-              const exists = getBlacklistUsers()?.filter(
-                  (u) => u.user?.id === user?.id
-              )[0];
-              if(!exists) {
-                  return message.channel.send(`${user.tag} не в ЧС`);
-              }
-              const blacklisted = getBlacklistUsers().filter(
-                  (u) => u.user?.id !== user?.id
-              );
-              setBlacklistUsers(blacklisted);
-              break;
-          default: {
-              return message.channel.send(`**${type}** не add/remove/view`);
-          }
-      }
-      return message.channel.send(
-          `${user.tag} ${type === "add" ? "ушел в ЧС" : "больше не в ЧС"}`
-      );
-  },
+                if(!usr) {
+                    return message.channel.send("Не в ЧС");
+                }
+
+                return message.channel.send(`В чс по причине: **${users?.filter(
+                    (u) => u.user?.id === user?.id
+                )[0].reason}**`);
+            case "add":
+                if(users === null) return setBlacklistUsers([user]);
+
+                const existing =
+                    users !== null && users.filter((u) => u.user?.id === user.id)[0];
+
+                if(existing) return message.channel.send(`${user.tag} уже в ЧС по причине: **${users?.filter(
+                    (u) => u.user?.id === user?.id
+                )[0].reason}**`);
+
+                addBlacklistUser({
+                    user,
+                    reason
+                });
+                break;
+            case "remove":
+                if(users === null) {
+                    return message.channel.send(`${user.tag} не в ЧС`);
+                }
+                const exists = users?.filter(
+                    (u) => u.user?.id === user?.id
+                )[0];
+                if(!exists) {
+                    return message.channel.send(`${user.tag} не в ЧС`);
+                }
+                const blacklisted = users?.filter(
+                    (u) => u.user?.id !== user?.id
+                );
+                setBlacklistUsers(blacklisted);
+                break;
+            default: {
+                return message.channel.send(`**${type}** не add/remove/view`);
+            }
+        }
+        return message.channel.send(
+            `${user.tag} ${type === "add" ? `ушел в ЧС по причине: **${reason}**` : "больше не в ЧС"}`
+        );
+    },
 };

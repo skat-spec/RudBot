@@ -1,4 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
 const {
     formatDate,
     error
@@ -13,27 +15,30 @@ module.exports = {
     aliases: ['ковид'],
     async execute(message, args) {
         let country = args.join(' ')
-        let data = await fetch("https://disease.sh/v3/covid-19/countries/" + encodeURIComponent(
-     country)).then(res => res.json());
+        let data = await fetch("https://disease.sh/v3/covid-19/countries/" + encodeURIComponent(country)).then(res => res.json());
         if(!country) data = await fetch("https://disease.sh/v3/covid-19/all").then(res => res.json());
         if(data.message) return message.channel.send(error('Страна не найдена!'))
 
         message.channel.send(`Обновление было ${formatDate(new Date(data.updated))}`, new MessageEmbed()
-        .setTitle(data.country || 'Коронавирус')
-        .setDescription(`Заражений: \`${data.cases}\`
-Заражений за сегодня: \`${data.todayCases}\`
+            .setTitle(data.country || 'Коронавирус')
+            .setDescription(`Заражений: \`${formatNumber(data.cases)}\`
+Заражений за сегодня: \`${formatNumber(data.todayCases)}\`
 
-Сметртей: \`${data.deaths}\`
-Смертей за сегодня: \`${data.todayDeaths}\`
+Сметртей: \`${formatNumber(data.deaths)}\`
+Смертей за сегодня: \`${formatNumber(data.todayDeaths)}\`
 
-Выздоровело: \`${data.recovered}\`
-Выздоровело за сегодня: \`${data.todayRecovered}\`
+Выздоровело: \`${formatNumber(data.recovered)}\`
+Выздоровело за сегодня: \`${formatNumber(data.todayRecovered)}\`
 
-Болеет: \`${data.active}\`
-Смертей: \`${data.deaths}\`
-В критическом состоянии: \`${data.critical}\`
-Сделано тестов: \`${data.tests}\``)
-        .setThumbnail(`${data.countryInfo?.flag || 'https://storage.myseldon.com/news_pict_CD/CDC0F8531BA1D162DE098B176BB260C1'}`)
+Болеет: \`${formatNumber(data.active)}\`
+Смертей: \`${formatNumber(data.deaths)}\`
+В критическом состоянии: \`${formatNumber(data.critical)}\`
+Сделано тестов: \`${formatNumber(data.tests)}\``)
+            .setThumbnail(`${data.countryInfo?.flag || 'https://storage.myseldon.com/news_pict_CD/CDC0F8531BA1D162DE098B176BB260C1'}`)
         );
     }
 };
+
+function formatNumber(n) {
+    return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
