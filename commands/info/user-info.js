@@ -74,7 +74,7 @@ module.exports = {
           let diff2 = Math.round(Math.abs((date1.getTime() - date3.getTime())))
 
           let ubadges = 'Остсутствуют'
-          if(member.user.flags.toArray() != '') ubadges = `Значки: ${member.user.flags.toArray().map(flag => badges[flag]).join(', ')}`
+          if(member.user.flags.toArray() != '') ubadges = `${member.user.flags.toArray().map(flag => badges[flag]).join(', ')}`
 
           message.channel.send(new MessageEmbed()
               .setTitle(`Информация о пользователе`)
@@ -82,7 +82,7 @@ module.exports = {
               .setDescription(`Ник: **${member.user.tag} || ${member.user}**
 ID: **${id}**
 Статус: ${data.join(',\n')}
-${status}
+Значки: ${status}
 **${ubadges}**
 
 **Роли(${roleCount}):** ${roles}

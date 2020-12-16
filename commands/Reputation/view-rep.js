@@ -12,6 +12,7 @@ module.exports = {
     category: 'Reputation',
     aliases: ['viewrep'],
     usage: '<@Пользователь>',
+    args: true,
     async execute(message, args, bot) {
         const user =
             message.guild.members.cache.get(args[0]) ||

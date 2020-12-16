@@ -36,7 +36,7 @@ module.exports = {
         let voice = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'voice\').size')
         let text = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'text\').size')
 
-        const embed = new MessageEmbed()
+        message.channel.send(new MessageEmbed()
             .setColor("303136")
             .setTitle('Инфо')
             .setDescription(`**Создатель:** \`${bot.users.cache.get(Xaliks).tag}\`
@@ -58,9 +58,6 @@ module.exports = {
 **Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
             .addField('Репозиторий с говно-кодом', 'https://github.com/Xaliks/RudBot', true)
             .setFooter(`Аптайм: ${duration}`)
-            .setThumbnail(bot.user.displayAvatarURL())
-
-
-        message.channel.send(embed);
+            .setThumbnail(bot.user.displayAvatarURL()));
     }
 }

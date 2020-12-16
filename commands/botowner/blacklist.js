@@ -15,7 +15,7 @@ module.exports = {
     args: true,
     aliases: ['чс', '4c'],
     async execute(message, args, bot) {
-        if(message.author.id != Xaliks && message.author.id != '637309157997019136') return;
+        if(message.author.id != Xaliks) return;
         const type = args[0];
         const reason = args.slice(2).join(' ')
         const user =
@@ -23,11 +23,9 @@ module.exports = {
             message.mentions.users.first();
 
         if(!type) return message.channel.send("add/remove/view");
-
         if(!user) return message.channel.send("Ну да ну да... а кого в чс кидать то будем?")
-
         if(!args[2] && type === 'add') return message.channel.send("А причину кто писать будет?");
-
+        if(user.bot) return message.channel.send("Это бот, лол");
         if(user?.id === Xaliks && type === 'add') return message.channel.send(error('Ты че, попутал?'))
 
         const users = await getBlacklistUsers();

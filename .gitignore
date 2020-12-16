@@ -1,2 +1,12 @@
 config.json
 json.sqlite
+
+events/messageReactionAdd.js
+events/messageReactionRemove.js
+
+commands/TBR
+commands/cmds/bug.js
+commands/cmds/idea.js
+commands/botowner/pm2r.js
+
+data/bad.json
