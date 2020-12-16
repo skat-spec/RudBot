@@ -12,12 +12,7 @@ const {
     error,
     timer
 } = require("../utils/functions");
-const bad = require('../data/bad.json')
 const now = Date.now();
-const {
-    MessageEmbed
-} = require('discord.js')
-const db = require('quick.db')
 
 const time = (time) => {
     let result = (time - now);
