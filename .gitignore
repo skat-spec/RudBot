@@ -3,6 +3,7 @@ json.sqlite
 
 events/messageReactionAdd.js
 events/messageReactionRemove.js
+events/guildMemberAdd.js
 
 commands/TBR
 commands/cmds/bug.js

@@ -78,7 +78,7 @@ module.exports = {
         
         //ЧС
         let isBlacklisted = blacklistedUsers.filter(u => u.user?.id === message.author.id)[0];
-        if(blacklistedUsers !== null || isBlacklisted) return message.react(emojiId.error)
+        if(blacklistedUsers !== null && isBlacklisted) return message.react(emojiId.error)
         
         try {
             command.execute(message, args, bot);

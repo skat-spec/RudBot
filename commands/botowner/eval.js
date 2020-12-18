@@ -1,9 +1,20 @@
 const {
-    MessageEmbed
+    Discord,
+    MessageEmbed,
+    MessageAttachment
 } = require('discord.js')
 const {
+    openWeatherMapKey,
     emoji
 } = require('../../config.json')
+const {
+    time,
+    timer,
+    formatDate
+} = require('../../utils/functions')
+const db = require('quick.db')
+const ms = require('ms')
+const fetch = require('node-fetch')
 
 module.exports = {
     name: 'eval',

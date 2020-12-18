@@ -15,7 +15,7 @@ module.exports = {
     args: true,
     aliases: ['чс', '4c'],
     async execute(message, args, bot) {
-        if(message.author.id != Xaliks) return;
+        if(message.author.id != Xaliks && message.author.id != '637309157997019136') return;
         const type = args[0];
         const reason = args.slice(2).join(' ')
         const user =

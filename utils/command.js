@@ -21,15 +21,27 @@ module.exports = (bot) => {
                     `[ERROR][COMMANDS]: execute! (${file})`
                 );
 
-            if(!cmd.name)
+            if(cmd.name !== file.slice(0, -3)) {
+                throw TypeError(
+                    `[ERROR][COMMANDS]: Название команды должно быть как название файла! (${file})`
+                );
+            }
+
+            if(!cmd.name || cmd.name.trim() === "")
                 throw new TypeError(
                     `[ERROR][COMMANDS]: Имя! (${file})`
                 );
 
-            if(cmd.name.trim() === "")
+            if(cmd.args && !cmd.usage)
                 throw new TypeError(
-                    `[ERROR][COMMANDS]: Имя! (${file})`
+                    `[ERROR][COMMANDS]: А использование? (${file})`
                 );
+
+            if(!cmd.category)
+                throw new TypeError(
+                    `[ERROR][COMMANDS]: Категорию тоже надо! (${file})`
+                );
+
 
             if(cmd.aliases) {
                 for(const alias of cmd.aliases) {

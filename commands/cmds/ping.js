@@ -25,7 +25,10 @@ module.exports = {
             .setColor("303136")
             .setTitle('Пинг')
             .setDescription(`Ответ на команды: ${stat}${ping}ms
-WS Пинг: ${discordemoji}${bot.ws.ping}ms`)
+WS Пинг: ${discordemoji}${bot.ws.ping}ms
+        
+[Хостинг бота](https://hostvds.com/?affiliate_uuid=061b7539-b0f6-4d6d-8973-d603e081a737)
+[Пожертвовать на хостинг](https://www.donationalerts.com/r/xaliksss)`)
             .setTimestamp())
     },
 }

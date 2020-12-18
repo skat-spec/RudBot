@@ -37,9 +37,9 @@ module.exports = {
         let text = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'text\').size')
 
         message.channel.send(new MessageEmbed()
-            .setColor("303136")
-            .setTitle('Инфо')
-            .setDescription(`**Создатель:** \`${bot.users.cache.get(Xaliks).tag}\`
+        .setColor("303136")
+        .setTitle('Инфо')
+        .setDescription(`**Создатель:** \`${bot.users.cache.get(Xaliks).tag}\`
 **Создан:** \`${createdAt}\`
 
 **Кол-во команд:** \`${bot.commands.size - bot.commands.filter(cmd => cmd.admin).size - bot.commands.filter(cmd => cmd.category === 'nsfw').size}\`
@@ -56,8 +56,8 @@ module.exports = {
 **Версия Node.js:** \`${process.version}\`
 **Версия Discord.js:** \`${version}\`
 **Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
-            .addField('Репозиторий с говно-кодом', 'https://github.com/Xaliks/RudBot', true)
-            .setFooter(`Аптайм: ${duration}`)
-            .setThumbnail(bot.user.displayAvatarURL()));
+        .addField('Репозиторий с говно-кодом', 'https://github.com/Xaliks/RudBot', true)
+        .setFooter(`Аптайм: ${duration}`)
+        .setThumbnail(bot.user.displayAvatarURL()));
     }
 }

@@ -5,6 +5,13 @@ const {
     getServerPrefix,
     time
 } = require("../../utils/functions");
+let embed0 = new MessageEmbed().setAuthor("РудБот");
+let embed1 = new MessageEmbed().setAuthor("РудБот");
+let embed2 = new MessageEmbed().setAuthor("РудБот");
+let embed3 = new MessageEmbed().setAuthor("РудБот");
+let embed4 = new MessageEmbed().setAuthor("РудБот");
+let embed5 = new MessageEmbed().setAuthor("РудБот");
+const nado = '**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n'
 
 module.exports = {
     name: 'help',
@@ -12,9 +19,12 @@ module.exports = {
     aliases: ['хелп', 'помощь', 'h'],
     usage: '[команда]',
     category: 'cmds',
-    execute(message, args) {
+    async execute(message, args) {
         let msgauthorid = message.author.id
-
+        const {
+            commands
+        } = message.client;
+        const prefix = await getServerPrefix(message.guild.id)
         const paginationEmbed = async (msg, pages, emojiList = ['◀️', '▶️'], timeout = 100000) => {
             let page = 0;
             const curPage = await msg.channel.send(pages[page].setFooter(`Страница ${page + 1}/${pages.length}`));
@@ -45,34 +55,26 @@ module.exports = {
             return curPage;
         };
 
-
-        const {
-            commands
-        } = message.client;
-        const prefix = getServerPrefix(message.guild.id)
-
         if(!args.length) {
-            const Cmds = commands.filter(c => c.category === 'cmds').map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`)
-            const RP = commands.filter(c => c.category === 'rp').map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`);
-            const TBR = commands.filter(c => c.category === 'TBR').map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`);
-            const Info = commands.filter(c => c.category === 'info').map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`);
-            const Rep = commands.filter(c => c.category === 'Reputation').map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`);
-            let embed1 = new MessageEmbed();
-            let embed2 = new MessageEmbed();
-            let embed3 = new MessageEmbed();
-            let embed4 = new MessageEmbed();
-            let embed5 = new MessageEmbed()
+            const Commands = function(category) {
+                return nado + commands.filter(c => c.category === category).map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`)
+            }
             embeds = [
-                embed1.setTitle("Помощь по командам").setDescription(`**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n${Cmds}`).setAuthor("РудБот"),
-                embed2.setTitle('Помощь РП').setDescription(`**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n${RP}`).setAuthor("РудБот"),
-                embed4.setTitle('Помощь Инфо').setDescription(`**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n${Info}`).setAuthor("РудБот"),
-                embed5.setTitle('Помощь Репутация').setDescription(`**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n${Rep}`).setAuthor("РудБот"),
+                embed0.setTitle("Помощь по настройке").setDescription(Commands('settings')),
+                embed1.setTitle("Помощь по командам").setDescription(Commands('cmds')),
+                embed2.setTitle('Помощь РП').setDescription(Commands('RP')),
+                embed3.setTitle('Помощь Инфо').setDescription(Commands('info')),
+                embed4.setTitle('Помощь Репутация').setDescription(Commands('Reputation')),
+                embed5.setTitle('Помощь Музыка').setDescription(Commands('music'))
             ]
 
             paginationEmbed(message, embeds);
 
             if(message.guild.id === '681142809654591501') {
-                message.channel.send(embed3.setTitle('Помощь Тут Бывает Руда').setDescription(`**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n\n${TBR}`).setAuthor("РудБот"))
+                message.channel.send(new MessageEmbed()
+                    .setTitle('Помощь Тут Бывает Руда')
+                    .setDescription(Commands('TBR'))
+                    .setAuthor("РудБот"))
             }
             return
         }
@@ -80,10 +82,7 @@ module.exports = {
         const name = args[0].toLowerCase();
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
         if(command.admin) return;
-        if(!command) {
-            message.reply('Я не нашел эту команду!');
-            return
-        }
+        if(!command) return message.reply('Я не нашел эту команду!');
 
         const data = []
         if(command.aliases) data.push(`\n\n**Псевдоним(ы):** ${command.aliases.join(', ')}`)

@@ -3,27 +3,32 @@ const {
     MessageEmbed
 } = require('discord.js')
 const db = require("quick.db");
-const strftimee = require('strftime')
-let strftime = strftimee.timezone('+0300')
+const strftime = require('strftime').timezone('+0300')
 
+
+// Префиксы
 /**
- * @param {string} guildId
+ * @param {String} guildId
+ * @returns {String} 
  */
 const getServerPrefix = (guildId) =>
     db.fetch(`prefix_${guildId}`);
 
 /**
- * @param {string} guildId
- * @param {string} newPrefix
+ * @param {String} guildId
+ * @param {String} newPrefix
  */
 const setServerPrefix = (guildId, newPrefix) => db.set(`prefix_${guildId}`, newPrefix);
 
-// Blacklist
+// ЧС
 /**
  * @param {Object} user
  */
 const addBlacklistUser = (user) => db.push("blacklist", user);
 
+/**
+ * @returns {Array}
+ */
 const getBlacklistUsers = () => db.fetch("blacklist");
 
 /**
@@ -32,7 +37,7 @@ const getBlacklistUsers = () => db.fetch("blacklist");
 const setBlacklistUsers = (users) => db.set("blacklist", users);
 
 
-// rep
+// Репутация
 /**
  * @param {String} guildId
  * @param {String} userId
@@ -50,38 +55,62 @@ const addUserRep = (guildId, userId, amount) =>
     db.add(`rep_${guildId}_${userId}`, amount);
 
 /**
- * @param {String} guildId
- * @param {String} userId
+ * @param {String} guildId 
+ * @param {String} userId 
+ * @returns {Number}
  */
 const getUserRep = (guildId, userId) =>
     db.fetch(`rep_${guildId}_${userId}`);
 
 /**
- * @param {String} guildId
- * @param {String} userId
- * @param {Number} amount
+ * @param {String} guildId 
+ * @param {String} userId 
+ * @param {Number} amount 
  */
 const remUserRep = (guildId, userId, amount) =>
     db.subtract(`rep_${guildId}_${userId}`, amount);
 
-
+/**
+ * @param {String} guildId 
+ */
 const resServerRep = (guildId) => {
     let GuildRep = db
         .fetchAll()
         .filter((da) => da.ID.startsWith(`rep_${guildId}`))
 
-        let i = 0
-        for(; i < GuildRep.length; i++) {
-            let UID = GuildRep[i].ID.replace(`rep_${guildId}_`, "");
-            remUserRep(guildId, UID, GuildRep[i].data)
-        }
+    let i = 0
+    for(; i < GuildRep.length; i++) {
+        let UID = GuildRep[i].ID.replace(`rep_${guildId}_`, "");
+        remUserRep(guildId, UID, GuildRep[i].data)
+    }
 }
 
-
-//Отстальное
+//Идеи
 /**
- * @param {string} data
- * @returns {string}
+ * @param {String} guildId
+ * @param {String} ChannelId 
+ */
+const setServerIdeaChannel = (guildId, ChannelId) =>
+    db.set(`idea_${guildId}`, ChannelId)
+
+/**
+ * @param {String} guildId
+ * @returns {String}
+ */
+const getServerIdeaChannel = (guildId) =>
+    db.fetch(`idea_${guildId}`)
+
+/**
+ * @param {String} guildId
+ */
+const delServerIdeaChannel = (guildId) =>
+    db.delete(`idea_${guildId}`)
+
+
+//Остальное
+/**
+ * @param {String} data
+ * @returns {String}
  */
 const formatDate = (date) => strftime('%d.%m.%Y в %H:%M:%S', date)
 
@@ -156,6 +185,9 @@ module.exports = {
     getUserRep,
     remUserRep,
     resServerRep,
+    setServerIdeaChannel,
+    delServerIdeaChannel,
+    getServerIdeaChannel,
     timer,
     time
 };

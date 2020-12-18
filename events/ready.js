@@ -5,7 +5,7 @@ const {
 module.exports = {
   name: "ready",
   execute(bot) {
-      console.log(`Залогинился как ${bot.user.tag}!`);
+      console.log(`[DISCORD] Залогинился как ${bot.user.tag}!`);
       const statuses = [
           `/help`,
           `By ${bot.users.cache.get(Xaliks).tag}`,
