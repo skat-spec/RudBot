@@ -3,9 +3,6 @@ const {
     error,
     yes
 } = require('../../utils/functions')
-const {
-    Xaliks
-} = require('../../config.json')
 
 module.exports = {
     name: "set-idea",
@@ -20,7 +17,7 @@ module.exports = {
           message.guild.channels.cache.find((ch) => ch.id === args[0]);
         if(!channel) return message.channel.send(error('Канал не найден!'))
         if(
-            message.author.id != Xaliks &&
+            message.author.id != '448799481777881089' &&
             !message.member.permissions.has(["MANAGE_GUILD"] &&
             !message.member.permissions.has(["ADMINISTRATOR"]))) return message.channel.send(error('У вас нет прав! (**Управлять сервером**)'))
         else {

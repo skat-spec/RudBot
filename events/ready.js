@@ -8,7 +8,7 @@ module.exports = {
       console.log(`[DISCORD] Залогинился как ${bot.user.tag}!`);
       const statuses = [
           `/help`,
-          `By ${bot.users.cache.get(Xaliks).tag}`,
+          `By ${bot.users.cache.get(Xaliks).tag}`
       ];
       setInterval(() => {
           const status = statuses[Math.floor(Math.random() * statuses.length)];

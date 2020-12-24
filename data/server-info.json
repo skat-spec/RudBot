@@ -45,6 +45,8 @@
         "VERIFIED": "Верифицированный",
         "VIP_REGIONS": "VIP Регионы",
         "WELCOME_SCREEN_ENABLED": "Экран приветствия",
-        "ENABLED_DISCOVERABLE_BEFORE": "Может путешствовать"
+        "ENABLED_DISCOVERABLE_BEFORE": "Может путешствовать",
+        "PREVIEW_ENABLED": "Предпросмотр",
+        "MEMBER_VERIFICATION_GATE_ENABLED": "Проверка участников"
     }
 }

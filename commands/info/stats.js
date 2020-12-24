@@ -29,12 +29,12 @@ module.exports = {
         var ping = Date.now() - message.createdTimestamp
         const duration = time(bot.uptime)
         let createdAt = formatDate(bot.user.createdAt);
-        let servers = await bot.shard.broadcastEval('this.guilds.cache.size')
-        let users = await bot.shard.broadcastEval('this.users.cache.size')
-        let call = await bot.shard.broadcastEval('this.channels.cache.size')
-        let categories = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'category\').size')
-        let voice = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'voice\').size')
-        let text = await bot.shard.broadcastEval('this.channels.cache.filter(c => c.type === \'text\').size')
+        let servers = bot.guilds.cache.size
+        let users = bot.users.cache.size
+        let call = bot.channels.cache.size
+        let categories = bot.channels.cache.filter(c => c.type === 'category').size
+        let voice = bot.channels.cache.filter(c => c.type === 'voice').size
+        let text = bot.channels.cache.filter(c => c.type === 'text').size
 
         message.channel.send(new MessageEmbed()
         .setColor("303136")

@@ -5,11 +5,11 @@ const {
   yes
 } = require("../../utils/functions");
 const {
-  MessageEmbed
-} = require('discord.js')
-const {
   Xaliks
 } = require('../../config.json')
+const {
+  MessageEmbed
+} = require('discord.js')
 
 module.exports = {
   name: 'prefix',
