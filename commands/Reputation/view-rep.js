@@ -1,4 +1,5 @@
 const {
+    findMember,
     getUserRep,
     error
 } = require("../../utils/functions");
@@ -14,13 +15,8 @@ module.exports = {
     usage: '<@Пользователь>',
     args: true,
     async execute(message, args, bot) {
-        const user =
-            message.guild.members.cache.get(args[0]) ||
-            message.mentions.members.first() ||
-            message.member
-        if(!user) return message.channel.send(error('Пользователь не найден!'))
-        if(user.user.bot) return message.channel.send(error('Это бот. Зачем?'))
-
+        const user = findMember(message, args.join(' '), true).user
+        if(user.bot) return message.channel.send(error('Это бот. Зачем?'))
         const e1 = message.guild.id
         const e2 = user.id
 

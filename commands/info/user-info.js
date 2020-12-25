@@ -3,7 +3,8 @@ const {
 } = require('discord.js')
 const {
     formatDate,
-    timer
+    timer,
+    findMember
 } = require("../../utils/functions");
 const {
     emoji
@@ -20,16 +21,11 @@ module.exports = {
     cooldown: 10,
     usage: '[@Пользователь/ID]',
     category: 'info',
-    async execute(message, args) {
-        let member =
-            message.guild.members.cache.get(args[0]) ||
-            message.mentions.members.first() ||
-            message.member
-
+    async execute(message, args, bot) {
+        const member = findMember(message, args.join(' '), true)
         const {
             id
         } = member;
-
         const data = [];
         if(member.presence.status === 'offline') data.push(`${emoji.offline} Оффлайн`)
         else {
@@ -37,17 +33,14 @@ module.exports = {
             if(member.presence.clientStatus.mobile) data.push(`${emoji[member.presence.clientStatus.mobile]} Телефон`);
             if(member.presence.clientStatus.desktop) data.push(`${emoji[member.presence.clientStatus.desktop]} Компьютер`);
         }
-
-
-
         let date1 = new Date(message.createdTimestamp)
         let date2 = new Date(member.user.createdTimestamp)
         let date3 = new Date(message.guild.member(member).joinedTimestamp)
-        let createdAtMS = Math.round(Math.abs((date1.getTime() - date2.getTime())))
-        let joinedAtMS = Math.round(Math.abs((date1.getTime() - date3.getTime())))
+        const createdAtMS = Math.round(Math.abs((date1.getTime() - date2.getTime())))
+        const joinedAtMS = Math.round(Math.abs((date1.getTime() - date3.getTime())))
         let ubadges = 'Остсутствуют'
-        const joinedAt = formatDate(new Date(member.joinedAt))
-        const createdAt = formatDate(new Date(member.user.createdAt))
+        const joinedAt = formatDate(date3)
+        const createdAt = formatDate(date2)
         const roles =
             member.roles.cache
             .filter((r) => r !== message.guild.id)

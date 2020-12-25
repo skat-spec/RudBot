@@ -1,4 +1,5 @@
 const {
+    findMember,
     remUserRep,
     getUserRep,
     error,
@@ -16,9 +17,7 @@ module.exports = {
     usage: '<@Пользователь>',
     args: true,
     async execute(message, args, bot) {
-        const user =
-            message.guild.members.cache.get(args[0]) ||
-            message.mentions.members.first()
+        const user = findMember(message, args.join(' ')).user
         if(!user) return message.channel.send(error('Пользователь не найден!'));
         const amount = args[1];
         const e1 = message.guild.id;

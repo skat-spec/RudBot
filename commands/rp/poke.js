@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -8,16 +13,15 @@ module.exports = {
     usage: '<@Пользователь>',
     category: 'rp',
     aliases: ['тыкнуть', 'тыкаю'],
-    async execute(message) {
+    async execute(message, args, bot) {
         const data = await fetch("https://nekos.life/api/v2/img/poke").then(res => res.json());
-        let user = message.mentions.users.first(); 
+        const user = findMember(message, args.join(' ')); 
 
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете тыкать в себя!`)
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете тыкать в себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setTitle(`${message.author.username} тыкает в ${user.username}`)
+        .setDescription(`${message.author} тыкает в ${user}`)
         .setImage(`${data.url}`)
         .setTimestamp());
-    }
+    },
 };

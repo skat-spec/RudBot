@@ -152,8 +152,27 @@ const time = (type) => {
 }
 
 /**
- * @param {string} errorEmbed
- * @returns {string}
+ * @param {Message} message
+ * @param {String} user
+ * @param {Boolean} yes
+ * @returns {Object}
+ */
+const findMember = (message, user, yes) => {
+    let e;
+    if(!user || user === '' && yes) e = message.member
+    else e = message.guild.member(
+        message.mentions.users.first() ||
+        message.guild.members.cache.get(user) ||
+        message.guild.members.cache.find((m) => m.user.id === user) ||
+        message.guild.members.cache.find((m) => m.user.tag.toLowerCase() === user.toLocaleLowerCase()) ||
+        message.guild.members.cache.find(m => m.user.username.toLowerCase().startsWith(user.toLocaleLowerCase())) ||
+        message.guild.members.cache.find(m => m.displayName.toLowerCase().startsWith(user.toLocaleLowerCase())))
+    return e
+}
+
+/**
+ * @param {String} errorEmbed
+ * @returns {String}
  */
 let error = (errorEmbed) => new MessageEmbed()
     .setTitle(`${cfg.emoji.error} Ошибка!`)
@@ -162,8 +181,8 @@ let error = (errorEmbed) => new MessageEmbed()
     .setTimestamp()
 
 /**
- * @param {string} yesEmbed
- * @returns {string}
+ * @param {String} yesEmbed
+ * @returns {String}
  */
 let yes = (yesEmbed) => new MessageEmbed()
     .setTitle(`${cfg.emoji.yes} Успешно!`)
@@ -173,6 +192,7 @@ let yes = (yesEmbed) => new MessageEmbed()
 
 module.exports = {
     formatDate,
+    findMember,
     error,
     yes,
     getServerPrefix,

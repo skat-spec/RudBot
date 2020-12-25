@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -7,18 +12,16 @@ module.exports = {
     args: true,
     usage: '<@Пользователь>',
     category: 'rp',
-    guildOnly: true,
     aliases: ['обнять', 'обнимаю'],
-    async execute(message) {
+    async execute(message, args, bot) {
         const data = await fetch("https://nekos.life/api/v2/img/hug").then(res => res.json());
-        let user = message.mentions.users.first();
+        const user = findMember(message, args.join(' '));
 
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете обнять себя!`)
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете обнять себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setAuthor(`${message.author.username} обнимает ${user.username}`)
-        .setImage(`${data.url}`)
-        .setTimestamp());
-    }
+            .setDescription(`${message.author} обнимает ${user}`)
+            .setImage(`${data.url}`)
+            .setTimestamp());
+    },
 };

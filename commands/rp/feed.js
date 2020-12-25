@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -6,19 +11,17 @@ module.exports = {
     description: "Накормить пользователя",
     args: true,
     usage: '<@Пользователь>',
-    guildOnly: true,
     category: 'rp',
     aliases: ['кормить', 'покормить', 'кормлю'],
-    async execute(message) {
+    async execute(message, args, bot) {
         const data = await fetch("https://nekos.life/api/v2/img/feed").then(res => res.json());
-        let user = message.mentions.users.first(); 
+        const user = findMember(message, args.join(' '));
 
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете покормить себя!`)
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете покормить себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setAuthor(`${message.author.username} кормит ${user.username}`)
-        .setImage(`${data.url}`)
-        .setTimestamp());
-    }
+            .setDescription(`${message.author} кормит ${user}`)
+            .setImage(`${data.url}`)
+            .setTimestamp());
+    },
 };

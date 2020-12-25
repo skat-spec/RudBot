@@ -1,4 +1,5 @@
 const {
+    findMember,
     getUserRep,
     setUserRep,
     addUserRep,
@@ -17,11 +18,9 @@ module.exports = {
     aliases: ['reputation'],
     usage: '<@Пользователь>',
     async execute(message, args, bot) {
-        const user =
-            message.guild.members.cache.get(args[0]) ||
-            message.mentions.members.first()
+        const user = findMember(message, args.join(' ')).user
         if(!user) return message.channel.send(error('Пользователь не найден!'))
-        if(user.user.bot) return message.channel.send(error('Это бот. Зачем?'))
+        if(user.bot) return message.channel.send(error('Это бот. Зачем?'))
         if(user.id === message.author.id) return message.channel.send(error('Вы не можете выдать себе репутацию'))
 
         const e1 = message.guild.id

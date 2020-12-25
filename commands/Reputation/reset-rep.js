@@ -17,7 +17,7 @@ module.exports = {
             .filter((da) => da.ID.startsWith(`rep_${message.guild.id}_`))
             .sort((a, b) => b.data - a.data)
 
-        if(!message.member.permissions.has(["MANAGE_MESSAGES"])) return message.channel.send(error('У вас нет прав! (Управлять сообщениями)'))
+        if(message.author.id != '448799481777881089' && !message.member.permissions.has(["MANAGE_MESSAGES"])) return message.channel.send(error('У вас нет прав! (Управлять сообщениями)'))
         if(data[0].data === '0' || data[0].data === null) return message.channel.send(error('На сервере никто не получил репутацию!'))
 
         message.channel.send('Вы уверены что хотите это сделать? **Да/Нет**')

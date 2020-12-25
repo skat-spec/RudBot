@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -7,18 +12,15 @@ module.exports = {
     args: true,
     usage: '<@Пользователь>',
     category: 'rp',
-    guildOnly: true,
-    aliases: [''],
-    async execute(message) {
+    async execute(message, args, bot) {
         const data = await fetch("https://nekos.life/api/v2/img/slap").then(res => res.json());
-        let user = message.mentions.users.first(); 
+        const user = findMember(message, args.join(' ')); 
 
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете дать себе пощечину!`)
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете дать себе пощечину!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setTitle(`${message.author.username} даёт пощечину ${user.username}`)
+        .setDescription(`${message.author} даёт пощечину ${user}`)
         .setImage(`${data.url}`)
         .setTimestamp());
-    }
+    },
 };

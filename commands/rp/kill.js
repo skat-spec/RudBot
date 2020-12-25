@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -7,19 +12,16 @@ module.exports = {
     args: true,
     usage: '<@Пользователь>',
     category: 'rp',
-    guildOnly: true,
     aliases: ['убить', 'убиваю'],
-    async execute(message) {
-        let user = message.mentions.users.first(); 
-
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете убить себя!`)
-
+    async execute(message, args, bot) {
         const data = await fetch("https://miss.perssbest.repl.co/api/v2/kill").then(res => res.json());
+        const user = findMember(message, args.join(' '));
+
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете убить себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setTitle(`${message.author.username} Убил ${user.username}`)
+        .setDescription(`${message.author.username} Убил ${user}`)
         .setImage(`${data.image}`)
         .setTimestamp());
-    }
+    },
 };

@@ -54,7 +54,7 @@ module.exports = {
 
 Участников **${message.guild.memberCount}**
 :bust_in_silhouette: Пользователей: **${message.guild.members.cache.filter(m => !m.user.bot).size}**
-<:BOT:754080028496756969> Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
+Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
 ${emoji.online} Онлайн: **${getStatuses('online')}**
 ${emoji.offline} Оффлайн: **${getStatuses('offline')}**
 ${emoji.idle} Не актив: **${getStatuses('idle')}**
@@ -62,7 +62,7 @@ ${emoji.dnd} Не беспокоить: **${getStatuses('dnd')}**
 
 :books: Кол-во категорий: **${typeChannels('category')}**
 :page_facing_up: Кол-во текст. каналов **${typeChannels('text')}**
-<:voice:754264368920657930> Кол-во гол. каналов: **${typeChannels('voice')}**
+Кол-во гол. каналов: **${typeChannels('voice')}**
 AFK канал | Тайм-аут: ${afk}
 
 Дата создания: **${formatDate(date1)}**

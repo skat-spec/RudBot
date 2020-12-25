@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
+const {
+    findMember
+} = require('../../utils/functions');
 const fetch = require("node-fetch");
 
 module.exports = {
@@ -7,19 +12,16 @@ module.exports = {
     args: true,
     usage: '<@Пользователь>',
     category: 'rp',
-    guildOnly: true,
     aliases: ['пощекотать', 'щекотать'],
-    async execute(message) {
+    async execute(message, args, bpt) {
         const data = await fetch("https://nekos.life/api/v2/img/tickle").then(res => res.json());
-        let user = message.mentions.users.first(); 
+        const user = findMember(message, args.join(' ')); 
 
-        if(message.author.id === user.id) return message.channel.send(`Вы не можете пощекотать себя!`)
+        if(message.author.id === user.id) return message.channel.send(`Вы не можете пощекотать себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setFooter(message.author.username)
-        .setColor("BLUE")
-        .setTitle(`${message.author.username} щекочет ${user.username}`)
+        .setTitle(`${message.author} щекочет ${user}`)
         .setImage(`${data.url}`)
         .setTimestamp());
-    }
+    },
 };
