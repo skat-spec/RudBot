@@ -12,9 +12,7 @@ module.exports = (bot) => {
         const isPlayer = file.startsWith("player.");
 
         if(!event.execute)
-            throw new TypeError(
-                `[ERROR]: execute! (${file})`
-            );
+            throw new TypeError(`[ERROR]: execute! (${file})`);
 
         if(!event.name)
             throw new TypeError(`[ERROR]: имя! (${file})`);

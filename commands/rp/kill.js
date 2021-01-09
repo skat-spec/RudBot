@@ -20,7 +20,7 @@ module.exports = {
         if(message.author.id === user.id) return message.channel.send(`Вы не можете убить себя!`);
 
         message.channel.send(new MessageEmbed()
-        .setDescription(`${message.author.username} Убил ${user}`)
+        .setDescription(`${message.author} Убил ${user}`)
         .setImage(`${data.image}`)
         .setTimestamp());
     },

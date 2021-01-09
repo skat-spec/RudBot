@@ -1,9 +1,11 @@
 const {
-    MessageEmbed
+    Discord,
+    MessageEmbed,
+    MessageAttachment
 } = require('discord.js')
 const {
     emoji
-} = require('../../config.json')
+} = require('../../data/emojis.json')
 
 module.exports = {
     name: 'eval',

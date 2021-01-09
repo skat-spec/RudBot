@@ -13,16 +13,18 @@ const {
 } = require('../../data/server-info')
 const {
     emoji
-} = require('../../config.json')
+} = require('../../data/emojis.json')
 
 module.exports = {
     name: 'server-info',
     description: 'Инфо о сервере',
     aliases: ['server', 'si'],
     category: 'info',
-    guildOnly: true,
-    async execute(message, args, bot) {
+    async execute(message) {
         const msg = await message.channel.send('Поиск информации...')
+
+        //Кол-во
+        //------------------------------------------------------------------------------------------------
         let emojis;
         if(message.guild.emojis.cache.size === 0) emojis = 'Отсутствуют';
         else emojis = message.guild.emojis.cache.size;
@@ -32,53 +34,62 @@ module.exports = {
         let afk;
         if(message.guild.afkChannel === null) afk = '**Отсутствует**';
         else afk = `**${message.guild.afkChannel.name}** | **${time(message.guild.afkTimeout * 100)}**`;
+        //------------------------------------------------------------------------------------------------
 
+        //Даты
+        //------------------------------------------------------------------------------------------------
         let date1 = new Date(message.createdTimestamp)
         let date2 = new Date(message.guild.createdTimestamp)
         let date3 = new Date(message.guild.member(message.author).joinedTimestamp)
-        let diff1 = Math.round(Math.abs((date1.getTime() - date2.getTime())))
-        let diff2 = Math.round(Math.abs((date1.getTime() - date3.getTime())))
+        const createdAtMS = Math.round(Math.abs((date1.getTime() - date2.getTime())))
+        const joinedAtMS = Math.round(Math.abs((date1.getTime() - date3.getTime())))
+        const joinedAt = formatDate(date3)
+        const createdAt = formatDate(date2)
+        //------------------------------------------------------------------------------------------------
 
-        let embed = new MessageEmbed()
-            .setAuthor(`${message.guild.name}`, message.guild.iconURL({
-                dynamic: true
-            }))
+        const embed = new MessageEmbed()
+            .setAuthor(message.guild.name)
             .setTitle(`Информация о сервере`)
             .setDescription(`ID: **${message.guild.id}**
 Регион: **${regions[message.guild.region]}**
 Владелец: **${message.guild.owner}**
 Уровень верификации: **${verification[message.guild.verificationLevel]}**
+AFK канал | Тайм-аут: ${afk}`)
 
-:grinning: Кол-во эмодзи: **${emojis}**
-🎭 Кол-во ролей: **${roles}**
-
-Участников **${message.guild.memberCount}**
-:bust_in_silhouette: Пользователей: **${message.guild.members.cache.filter(m => !m.user.bot).size}**
-Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
+            //Участники
+            //------------------------------------------------------------------------------------------------
+            .addField(`Участников (${message.guild.memberCount})`, `:bust_in_silhouette: Пользователей: **${message.guild.members.cache.filter(m => !m.user.bot).size}**
+${emoji.bot} Ботов: **${message.guild.members.cache.filter(m => m.user.bot).size}**
 ${emoji.online} Онлайн: **${getStatuses('online')}**
 ${emoji.offline} Оффлайн: **${getStatuses('offline')}**
 ${emoji.idle} Не актив: **${getStatuses('idle')}**
-${emoji.dnd} Не беспокоить: **${getStatuses('dnd')}**
+${emoji.dnd} Не беспокоить: **${getStatuses('dnd')}**`, true)
+            //------------------------------------------------------------------------------------------------
 
+            //Количество
+            //------------------------------------------------------------------------------------------------
+            .addField('Количество', `:grinning: Кол-во эмодзи: **${emojis}**
+🎭 Кол-во ролей: **${roles}**
 :books: Кол-во категорий: **${typeChannels('category')}**
 :page_facing_up: Кол-во текст. каналов **${typeChannels('text')}**
-Кол-во гол. каналов: **${typeChannels('voice')}**
-AFK канал | Тайм-аут: ${afk}
+${emoji.voice} Кол-во гол. каналов: **${typeChannels('voice')}**`, true)
+            .addField(`⁣⁣⁣⁣`, `⁣`, true)
+            //------------------------------------------------------------------------------------------------
 
-Дата создания: **${formatDate(date1)}**
-(**${getDay(diff1)} назад**)
-Вы присоединились: **${formatDate(date2)}**
-(**${getDay(diff2)} назад**)`)
             .setTimestamp()
             .setFooter('Дизайн JeggyBot')
             .setThumbnail(message.guild.iconURL({
                 dynamic: true
             }))
-        if(message.guild.premiumSubscriptionCount > 0) {
-            embed.addField(`Буст`, `Уровень буста: **${message.guild.premiumTier}**
-Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
-        }
 
+        //Если есть бусты
+        //------------------------------------------------------------------------------------------------
+        if(message.guild.premiumSubscriptionCount > 0) embed.addField(`Буст`, `${emoji.boost} Уровень буста: **${message.guild.premiumTier}**
+${emoji.boosted} Кол-во бустов: **${message.guild.premiumSubscriptionCount}**`, true)
+        //------------------------------------------------------------------------------------------------
+
+        //Если есть особенности
+        //------------------------------------------------------------------------------------------------
         if(message.guild.features[0]) {
             let feat = '';
             message.guild.features.forEach((FEAT) => {
@@ -86,6 +97,14 @@ AFK канал | Тайм-аут: ${afk}
             })
             embed.addField(`Особенности:`, feat, true)
         }
+        //------------------------------------------------------------------------------------------------
+
+        //Даты
+        //------------------------------------------------------------------------------------------------
+        embed.addField(`⁣⁣⁣⁣`, `⁣`, false)
+        embed.addField(`Дата создания: **${createdAt}**`, `(**${getDay(createdAtMS)} назад**)`, true)
+        embed.addField(`Вы присоединились: **${joinedAt}**`, `(**${getDay(joinedAtMS)} назад**)`, true)
+        //------------------------------------------------------------------------------------------------
 
         msg.edit('', embed)
 

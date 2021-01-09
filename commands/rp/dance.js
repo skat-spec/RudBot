@@ -12,7 +12,7 @@ module.exports = {
         const data = await fetch("https://miss.perssbest.repl.co/api/v2/dance").then(res => res.json());
 
         message.channel.send(new MessageEmbed()
-            .setDescription(`${message.author.username} Танцует`)
+            .setDescription(`${message.author} Танцует`)
             .setImage(`${data.image}`)
             .setTimestamp());
     },

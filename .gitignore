@@ -1,4 +1,4 @@
-config.json
+github
 json.sqlite
 
 events/messageReactionAdd.js
@@ -11,4 +11,4 @@ commands/cmds/idea.js
 commands/botowner/pm2r.js
 
 data/bad.json
-github
+config.json

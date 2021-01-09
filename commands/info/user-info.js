@@ -8,7 +8,7 @@ const {
 } = require("../../utils/functions");
 const {
     emoji
-} = require('../../config.json')
+} = require('../../data/emojis.json')
 const {
     badges,
     ActivityType
@@ -26,11 +26,11 @@ module.exports = {
 
         //Статус
         const clientStatus = [];
-        if(member.presence.status === 'offline') clientStatus.push(`${emoji.offline} Оффлайн\n`)
+        if(member.presence.status === 'offline') clientStatus.push(`${emoji.offline} Оффлайн`)
         else {
-            if(member.presence.clientStatus.web) clientStatus.push(`${emoji[member.presence.clientStatus.web]} Сайт\n`);
-            if(member.presence.clientStatus.mobile) clientStatus.push(`${emoji[member.presence.clientStatus.mobile]} Телефон\n`);
-            if(member.presence.clientStatus.desktop) clientStatus.push(`${emoji[member.presence.clientStatus.desktop]} Компьютер\n`);
+            if(member.presence.clientStatus.web) clientStatus.push(`${emoji[member.presence.clientStatus.web]} Сайт`);
+            if(member.presence.clientStatus.mobile) clientStatus.push(`${emoji[member.presence.clientStatus.mobile]} Телефон`);
+            if(member.presence.clientStatus.desktop) clientStatus.push(`${emoji[member.presence.clientStatus.desktop]} Компьютер`);
         }
 
         //Создан / Зашел
@@ -51,20 +51,20 @@ module.exports = {
             .slice(0, -1)
             .join(", ") || "**Остсутствуют**"
 
-        const Roles = member.roles.cache.size - 1
+        const RolesCount = member.roles.cache.size - 1
 
         //Статус
         let status = '';
-        let activity = '\n';
-        if(member.user.presence.status != 'offline' && member.user.presence.activities[0]) {
-            if(member.user.presence.activities[0].type === 'CUSTOM_STATUS') status = `${member.user.presence.activities[0].state === null ? '' : member.user.presence.activities[0].state}`;
-            else status += `${ActivityType[member.user.presence.activities[0].type]} **${member.user.presence.activities[0].name}**`
+        let activity = '';
+        let act = member.user.presence.activities;
+        if(member.user.presence.status != 'offline' && act[0]) {
+            if(act[0].type === 'CUSTOM_STATUS') status = act[0].state === null ? '' : act[0].state;
+            else status = ActivityType[act[0].type] + `**${act[0].name}**`
 
             let i = 1
-            for(; i < 11; i++) {
-                if(member.user.presence.activities[i]) {
-                    if(member.user.presence.activities[i].type === 'PLAYING' || 'STREAMING' || 'LISTENING' || 'WATCHING') activity += `${ActivityType[member.user.presence.activities[i].type]} **${member.user.presence.activities[i].name}**\n`
-                }
+            for(; i < 15; i++) {
+                if (!act[i]) break;
+                activity += `${ActivityType[act[i].type]} **${act[i].name}**\n`
             }
         }
 
@@ -73,25 +73,26 @@ module.exports = {
         if(member.user.flags?.toArray() != '') ubadges = `${member.user.flags.toArray().map(flag => badges[flag]).join(', ')}`
 
         //Эмбед
-        message.channel.send(new MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle(`Информация о пользователе`)
             .setAuthor(member.user.tag, member.displayAvatarURL)
-            .setDescription(`Ник: **${member.user.tag} || ${member.user}**
+            .setDescription(`Ник на сервере: ${member.user}
 ID: **${member.id}**
-Статус: ${clientStatus}${status}
-${activity}Значки: **${ubadges}**
-
-**Роли(${Roles}):** ${roles}
-
-Аккаунт создан: **${createdAt}** (${getDay(createdAtMS)} назад)
-Зашел на сервер: **${joinedAt}** (${getDay(joinedAtMS)} назад)`)
-            .setColor(member.displayHexColor || '303136')
-            .setThumbnail(member.user.displayAvatarURL({
+Значки: **${ubadges}**`)
+        if (activity != '' || activity) embed.addField('Активность:', activity, true)
+        embed.addField('Статус:', clientStatus.join('\n'), true)
+        if (status != '' || status) embed.addField('Пользовательский статус:', status, true)
+        embed.addField(`**Роли (${RolesCount}):**`, roles, false)
+        embed.addField('Аккаунт создан:', `**${createdAt}** (${getDay(createdAtMS)} назад)`, true)
+        embed.addField('Зашел на сервер:', `**${joinedAt}** (${getDay(joinedAtMS)} назад)`, true)
+        embed.setColor(member.displayHexColor || '303136')
+        embed.setThumbnail(member.user.displayAvatarURL({
                 dynamic: true,
                 size: 2048
             }))
-            .setFooter('Дизайн JeggyBot')
-            .setTimestamp())
+        embed.setFooter('Дизайн JeggyBot')
+        embed.setTimestamp()
+        message.channel.send(embed)
     }
 }
 

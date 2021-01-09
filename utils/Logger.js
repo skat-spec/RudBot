@@ -3,7 +3,7 @@ const { formatDate } = require('./functions')
 
 class Logger {
   now() {
-    return formatDate(new Date());
+    return formatDate(new Date(Date.now()));
   }
 
   /**

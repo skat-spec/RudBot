@@ -9,6 +9,6 @@
 3. npm install
 4. Переименуйте config.json.example на config.json
 5. Заполните его ^
-6. Поставьте свои эмодзи в data/user-info.json
+6. Поставьте свои эмодзи в data/user-info.json и в data/emojis.json
 6. npm start
 7. Если эта какашка не работает, то пишите мне в лс в дискорде (Xaliks#5991) либо в вк (vk.com/xaliksss)

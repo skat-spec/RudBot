@@ -9,6 +9,7 @@ const {
 const {
     Xaliks
 } = require('../../config.json')
+const db = require('quick.db')
 const {
     mem,
     cpu,
@@ -19,7 +20,6 @@ module.exports = {
     name: 'stats',
     description: 'Статистика бота',
     aliases: ['инфо'],
-    usage: '',
     category: 'info',
     async execute(message, args, bot) {
         const {
@@ -50,12 +50,15 @@ module.exports = {
 
 **Ответ на команды:** \`${ping}\`ms
 **WS пинг:** \`${Math.round(bot.ws.ping)}\`ms
-**Использование CPU:** \`${await cpu.usage()}%\`
+<:CPU:756151041346764871>**Использование CPU:** \`${await cpu.usage()}%\`
 **Кол-во ядер:** \`${cpu.count()}\`
-**Использование ОЗУ:** \`${usedMemMb.toFixed(0)}\`MB / \`${(totalMemMb).toFixed(0)}\`MB
-**Версия Node.js:** \`${process.version}\`
-**Версия Discord.js:** \`${version}\`
-**Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
+<:RAM:751103280033038498>**Использование ОЗУ:** \`${usedMemMb.toFixed(0)}\`MB / \`${(totalMemMb).toFixed(0)}\`MB
+<:nodejs:751109861239947264>**Версия Node.js:** \`${process.version}\`
+<:djs:751109146903838780>**Версия Discord.js:** \`${version}\`
+<:os:751122631905902642>**Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
+        .addField('Обратотка', `Обработано команд: \`${db.fetch('commands')}\`
+Прочтено сообщений: \`${db.fetch('messages')}\``)
+        .addField('Пригласить меня', `[Пригласить меня на свой сервер](https://discord.com/api/oauth2/authorize?client_id=${bot.user.id}&permissions=8&scope=bot)`)
         .addField('Репозиторий с говно-кодом', 'https://github.com/Xaliks/RudBot', true)
         .setFooter(`Аптайм: ${duration}`)
         .setThumbnail(bot.user.displayAvatarURL()));

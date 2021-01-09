@@ -19,7 +19,6 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
             .setFooter(message.author.username)
-            .setColor("303136")
             .setTitle(`Информация о minecraft сервере`)
             .setDescription(`Онлайн? **${data.online ? 'ДА' : 'НЕТ'}**
 

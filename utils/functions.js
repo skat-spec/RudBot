@@ -1,24 +1,15 @@
-const cfg = require('../config.json')
+const {
+    errorLogsChannelId,
+    Xaliks
+} = require('../config.json')
+const {
+    emoji
+} = require('../data/emojis.json')
 const {
     MessageEmbed
 } = require('discord.js')
 const db = require("quick.db");
 const strftime = require('strftime').timezone('+0300')
-
-
-// Префиксы
-/**
- * @param {String} guildId
- * @returns {String} 
- */
-const getServerPrefix = (guildId) =>
-    db.fetch(`prefix_${guildId}`);
-
-/**
- * @param {String} guildId
- * @param {String} newPrefix
- */
-const setServerPrefix = (guildId, newPrefix) => db.set(`prefix_${guildId}`, newPrefix);
 
 // ЧС
 /**
@@ -85,26 +76,28 @@ const resServerRep = (guildId) => {
     }
 }
 
-//Идеи
-/**
- * @param {String} guildId
- * @param {String} ChannelId 
- */
-const setServerIdeaChannel = (guildId, ChannelId) =>
-    db.set(`idea_${guildId}`, ChannelId)
 
+//Свадьбы
+/**
+ * @param {String} guildId 
+ * @param {String} userId 
+ * @param {String} authorId 
+ */
+const setMarry = (guildId, userId, authorId) =>
+    db.set(`marry_${guildId}_${userId}`, authorId)
+/**
+ * @param {String} guildId 
+ * @param {String} userId 
+ */
+const delMarry = (guildId, userId) =>
+    db.delete(`marry_${guildId}_${userId}`)
 /**
  * @param {String} guildId
+ * @param {String} userId
  * @returns {String}
  */
-const getServerIdeaChannel = (guildId) =>
-    db.fetch(`idea_${guildId}`)
-
-/**
- * @param {String} guildId
- */
-const delServerIdeaChannel = (guildId) =>
-    db.delete(`idea_${guildId}`)
+const getMarry = (guildId, userId) =>
+    db.fetch(`marry_${guildId}_${userId}`)
 
 
 //Остальное
@@ -152,51 +145,78 @@ const time = (type) => {
 }
 
 /**
- * @param {Message} message
- * @param {String} user
- * @param {Boolean} yes
+ * @param {import("discord.js").Client} bot Бот
+ * @returns {import {"discord.js"}.MessageEmbed} Embed
+ */
+const sendErrorLog = (bot, error) => {
+    const channel = bot.channels.cache.get(errorLogsChannelId);
+    if (!channel || !errorLogsChannelId) return;
+  
+    const name = error.name || 'Отстутствует';
+    const code = error.code || 'Отстутствует';
+    const httpStatus = error.httpStatus || 'Отстутствует';
+    const path = error.path || 'Отстутствует';
+    const stack = error.stack || error;
+  
+    channel.send(`<@${Xaliks}>`, new MessageEmbed()
+    .setTitle('Новая ошибка!')
+    .addField('**Короткая ошибка:**', `\`${error}\``, true)
+    .addField('**Имя:**', `\`${name}\``, true)
+    .addField('**Код ошибки:**', `\`${code}\``, true)
+    .addField('**Патч:**', `\`${path}\``, true)
+    .addField('**http Статус:**', `\`${httpStatus}\``, true)
+    .setDescription(`**Ошибка:**\n\`\`\`${stack}\`\`\``));
+}
+
+/**
+ * @param {String} description Описание ошибки
+ * @returns {import("discord.js").MessageEmbed} Embed "Ошибка"
+*/
+const error = (description) => new MessageEmbed()
+    .setTitle(`${emoji.error} Ошибка!`)
+    .setDescription(description)
+    .setColor('FF0000')
+    .setTimestamp()
+
+/**
+ * @param {String} description Описание "Успешно"
+ * @returns {import("discord.js").MessageEmbed} Embed "Успешно"
+ */
+const yes = (description) => new MessageEmbed()
+    .setTitle(`${emoji.yes} Успешно!`)
+    .setDescription(description)
+    .setColor('00FF00')
+    .setTimestamp()
+
+/**
+ * @param {import("discord.js").Message} message Сообщение
+ * @param {String} user Пользователь
+ * @param {Boolean} yes Упоминать ли автора?
  * @returns {Object}
  */
 const findMember = (message, user, yes) => {
     let e;
-    if(!user || user === '' && yes) e = message.member
+    if(user === ''  && yes) e = message.member
+    else if(!user) e = message.member
     else e = message.guild.member(
         message.mentions.users.first() ||
         message.guild.members.cache.get(user) ||
         message.guild.members.cache.find((m) => m.user.id === user) ||
         message.guild.members.cache.find((m) => m.user.tag.toLowerCase() === user.toLocaleLowerCase()) ||
+        message.guild.members.cache.find(m => m.user.username.toLowerCase() === user.toLocaleLowerCase()) ||
+        message.guild.members.cache.find(m => m.displayName.toLowerCase() === user.toLocaleLowerCase()) ||
         message.guild.members.cache.find(m => m.user.username.toLowerCase().startsWith(user.toLocaleLowerCase())) ||
-        message.guild.members.cache.find(m => m.displayName.toLowerCase().startsWith(user.toLocaleLowerCase())))
+        message.guild.members.cache.find(m => m.displayName.toLowerCase().startsWith(user.toLocaleLowerCase()))
+        )
+    if(!e) return message.channel.send(error('Пользователь не найден!'))
     return e
 }
-
-/**
- * @param {String} errorEmbed
- * @returns {String}
- */
-let error = (errorEmbed) => new MessageEmbed()
-    .setTitle(`${cfg.emoji.error} Ошибка!`)
-    .setDescription(errorEmbed)
-    .setColor('FF0000')
-    .setTimestamp()
-
-/**
- * @param {String} yesEmbed
- * @returns {String}
- */
-let yes = (yesEmbed) => new MessageEmbed()
-    .setTitle(`${cfg.emoji.yes} Успешно!`)
-    .setDescription(yesEmbed)
-    .setColor('00FF00')
-    .setTimestamp()
 
 module.exports = {
     formatDate,
     findMember,
     error,
     yes,
-    getServerPrefix,
-    setServerPrefix,
     addBlacklistUser,
     getBlacklistUsers,
     setBlacklistUsers,
@@ -205,9 +225,10 @@ module.exports = {
     getUserRep,
     remUserRep,
     resServerRep,
-    setServerIdeaChannel,
-    delServerIdeaChannel,
-    getServerIdeaChannel,
+    setMarry,
+    delMarry,
+    getMarry,
+    sendErrorLog,
     timer,
     time
 };

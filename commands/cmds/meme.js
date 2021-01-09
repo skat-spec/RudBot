@@ -6,7 +6,6 @@ const fetch = require("node-fetch");
 module.exports = {
     name: "meme",
     description: "Мем",
-    usage: '',
     category: 'cmds',
     aliases: ['мем', 'mem'],
     async execute(message) {
@@ -14,7 +13,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
             .setFooter(message.author.username)
-            .setImage(`${data.image}`)
+            .setImage(data.image)
             .setTimestamp());
     }
 };

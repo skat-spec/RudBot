@@ -1,5 +1,4 @@
 const {
-    setServerIdeaChannel,
     error,
     yes
 } = require('../../utils/functions')
@@ -24,7 +23,7 @@ module.exports = {
             !message.member.permissions.has(["MANAGE_GUILD"] &&
             !message.member.permissions.has(["ADMINISTRATOR"]))) return message.channel.send(error('У вас нет прав! (**Управлять сервером**)'))
         else {
-            setServerIdeaChannel(message.guild.id, channel.id)
+            message.guild.ideaChannel = channel.id
             message.channel.send(yes(`Канал установлен! (${channel})`))
         }
     }

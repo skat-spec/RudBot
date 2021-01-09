@@ -1,18 +1,23 @@
-const {
-    Xaliks,
-    emojiId
+let {
+    prefix,
+    Xaliks
 } = require('../config.json')
-const cfg = require('../config.json')
 const {
-    getServerPrefix,
+    emojiId
+} = require('../data/emojis.json')
+const {
     getUserRep,
     setUserRep,
-    setServerPrefix,
     getBlacklistUsers,
     error,
     timer
 } = require("../utils/functions");
+const bad = require('../data/bad.json')
 const now = Date.now();
+const {
+    MessageEmbed
+} = require('discord.js')
+const db = require('quick.db')
 
 const time = (time) => {
     let result = (time - now);
@@ -30,8 +35,24 @@ const time = (time) => {
 module.exports = {
     name: "message",
     async execute(bot, message) {
-        const prefix = (await getServerPrefix(message.guild.id)) || cfg.prefix;
-        const serverPrefix = await getServerPrefix(message.guild.id)
+        if(!message.guild) return;
+        message.guild.prefix = message.guild.prefix || prefix
+        message.guild.ideaChannel = message.guild.ideaChannel || undefined;
+
+        //ТБР
+        if(message.content.startsWith('112') && message.guild.id === '681142809654591501' && !message.author.bot) return message.channel.send('<@&773267105243201546> <@&681200931764961306> <@&704666508869238835> <@&733340381890084925>!' + ` by ${message.author}`);
+        let i = 0
+        for(; i < 1000; i++) {
+            if(message.guild?.id != '681142809654591501' || message.channel.id === '681532459539890205' || message.channel.id === '780340363516575784') break
+            let args = message.content.toLowerCase().trim().split(/ +/);
+            if(bad.includes(args[i])) message.delete({
+                reason: 'Анти-мат'
+            })
+        }
+        db.add('messages', 1)
+        
+        //Команды
+        prefix = message.guild.prefix
         const blacklistedUsers = await getBlacklistUsers();
         const userId = message.author.id;
         const userRep = await getUserRep(message.guild.id, userId);
@@ -54,17 +75,8 @@ module.exports = {
             const timestamps = cooldowns.get(command.name);
             const cooldownAmount = (command.cooldown || 3) * 1000;
             if(userRep === null || !userRep) setUserRep(message.guild.id, userId, 0);
-            if(serverPrefix === null || !serverPrefix) setServerPrefix(message.guild.id, cfg.prefix);
-            if(command.args && !args.length) {
-                let err = 'Недостаточно аргументов!'
-                if(command.usage) err += `\nПравильное использование команды: \`${prefix}${command.name} ${command.usage}\``
-                return message.channel.send(error(err));
-            }
-            if(command.admin && message.author.id != Xaliks) {
-                console.log(`${message.author.tag} пытался использовать admin команду! (${command.name})`)
-                message.channel.send(error(`Эту команду может выполнять только создатель бота!`))
-                return
-            }
+            if(command.args && !args.length) return message.channel.send(error(command.usage ? `Правильное использование команды: \`${prefix}${command.name} ${command.usage}\`` : '').setTitle('Недостаточно аргументов!'));
+            if(command.admin && message.author.id != Xaliks) return message.channel.send(error(`Эту команду может выполнять только создатель бота!`))
             if(timestamps.has(message.author.id)) {
                 const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
                 if(now < expirationTime && message.author.id != Xaliks) {
@@ -74,6 +86,20 @@ module.exports = {
             }
             timestamps.set(message.author.id, now);
             setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            
+            db.add('commands', 1)
+            
+            const w = await bot.guilds.cache.get('717450963442466886').fetchWebhooks();
+            const webhook = w.find((w) => w.name === 'Using');
+            if(!webhook) return;
+            webhook.send(new MessageEmbed()
+                .setTitle('Новая команда')
+                .setAuthor(message.author.tag, message.author.displayAvatarURL({
+                    dynamic: true
+                }))
+                .setDescription(message.content)
+                .setFooter(`С сервера ${message.guild.name} (${message.guild.id})`)
+                .setTimestamp())
         }
         
         //ЧС
@@ -83,8 +109,7 @@ module.exports = {
         try {
             command.execute(message, args, bot);
         } catch (error) {
-            console.error(error);
-            message.channel.send('Ошибка!')
+            message.channel.send('Ошибка! Обратитесь к создателю бота.')
         }
     }
 }

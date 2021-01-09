@@ -3,7 +3,7 @@ const {
 } = require('../../utils/functions')
 const {
     emojiId
-} = require('../../config.json')
+} = require('../../data/emojis.json')
 
 module.exports = {
     name: "stop",

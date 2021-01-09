@@ -2,16 +2,9 @@ const {
     MessageEmbed
 } = require('discord.js');
 const {
-    getServerPrefix,
+    error,
     time
 } = require("../../utils/functions");
-let embed0 = new MessageEmbed().setAuthor("РудБот");
-let embed1 = new MessageEmbed().setAuthor("РудБот");
-let embed2 = new MessageEmbed().setAuthor("РудБот");
-let embed3 = new MessageEmbed().setAuthor("РудБот");
-let embed4 = new MessageEmbed().setAuthor("РудБот");
-let embed5 = new MessageEmbed().setAuthor("РудБот");
-const nado = '**<> - Обязательное действие**\n**[] - Не обязательное действие**\n\n'
 
 module.exports = {
     name: 'help',
@@ -20,22 +13,27 @@ module.exports = {
     usage: '[команда]',
     category: 'cmds',
     async execute(message, args) {
-        let msgauthorid = message.author.id
         const {
+            client,
+            guild,
+            channel,
+            author
+        } = message;
+        let {
             commands
-        } = message.client;
-        const prefix = await getServerPrefix(message.guild.id)
-        const paginationEmbed = async (msg, pages, emojiList = ['◀️', '▶️'], timeout = 100000) => {
+        } = client
+        const prefix = await guild.prefix
+        const paginationEmbed = async (msg, pages, emojiList = ['◀️', '⏹️', '▶️']) => {
             let page = 0;
             const curPage = await msg.channel.send(pages[page].setFooter(`Страница ${page + 1}/${pages.length}`));
             for(const emoji of emojiList) await curPage.react(emoji);
             const reactionCollector = curPage.createReactionCollector(
                 (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot, {
-                    time: timeout
+                    time: 100000
                 }
             );
             reactionCollector.on('collect', (reaction, user) => {
-                if(user.id != msgauthorid) reaction.users.remove(user.id);
+                if(user.id != author.id) reaction.users.remove(user.id);
                 else {
                     reaction.users.remove(msg.author);
                     switch (reaction.emoji.name) {
@@ -43,6 +41,9 @@ module.exports = {
                             page = page > 0 ? --page : pages.length - 1;
                             break;
                         case emojiList[1]:
+                            reaction.message.delete();
+                            break;
+                        case emojiList[2]:
                             page = page + 1 < pages.length ? ++page : 0;
                             break;
                         default:
@@ -55,26 +56,21 @@ module.exports = {
             return curPage;
         };
 
-        if(!args.length) {
-            const Commands = function(category) {
-                return nado + commands.filter(c => c.category === category).map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`).join(`\n`)
-            }
+        if(!args[0]) {
             embeds = [
-                embed0.setTitle("Помощь по настройке").setDescription(Commands('settings')),
-                embed1.setTitle("Помощь по командам").setDescription(Commands('cmds')),
-                embed2.setTitle('Помощь РП').setDescription(Commands('RP')),
-                embed3.setTitle('Помощь Инфо').setDescription(Commands('info')),
-                embed4.setTitle('Помощь Репутация').setDescription(Commands('Reputation')),
-                embed5.setTitle('Помощь Музыка').setDescription(Commands('music'))
+                Embeds("Настройка", "settings"),
+                Embeds("Команды", "cmds"),
+                Embeds("РП", "rp"),
+                Embeds("Инфо", "info"),
+                Embeds("Репутация", "Reputation"),
+                Embeds("Музыка", "music"),
+                Embeds("Свадьбы", "Marry")
             ]
 
             paginationEmbed(message, embeds);
 
-            if(message.guild.id === '681142809654591501') {
-                message.channel.send(new MessageEmbed()
-                    .setTitle('Помощь Тут Бывает Руда')
-                    .setDescription(Commands('TBR'))
-                    .setAuthor("РудБот"))
+            if(guild.id === '681142809654591501') {
+                channel.send(Embeds("ТБР", "TBR"))
             }
             return
         }
@@ -82,15 +78,28 @@ module.exports = {
         const name = args[0].toLowerCase();
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
         if(command.admin) return;
-        if(!command) return message.reply('Я не нашел эту команду!');
+        if(!command) return channel.send(error('Я не нашел эту команду!'));
 
         const data = []
         if(command.aliases) data.push(`\n\n**Псевдоним(ы):** ${command.aliases.join(', ')}`)
         if(command.usage) data.push(`\n**Использование:** ${prefix}${command.name} ${command.usage}`)
 
-        message.channel.send(new MessageEmbed()
+        channel.send(new MessageEmbed()
             .setTitle(`Помощь`)
-            .setDescription(`**Имя:** ${command.name}\n**Описание:** ${command.description}\n${data}\n\n**Кулдаун:**${time(command.cooldown * 1000 || 3000)}`)
+            .setDescription(`**Имя:** ${command.name}\n**Описание:** ${command.description}\n${data}\n\n**Кулдаун:** ${time(command.cooldown * 1000 || 3000)}`)
             .setTimestamp());
+
+        function Embeds(Title, category) {
+            return new MessageEmbed()
+                .setAuthor("РудБот")
+                .setTitle(`Помощь **${Title}**`)
+                .setDescription(`**<> - Обязательное действие**
+**[] - Не обязательное действие**
+
+${commands
+    .filter(c => c.category === category)
+    .map(c => `${prefix}**${c.name}** ${c.usage || ''} - ${c.description}`)
+    .join(`\n`)}`)
+        }
     }
 }
