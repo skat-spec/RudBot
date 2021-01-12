@@ -21,7 +21,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
         .setDescription(`${message.author} тыкает в ${user}`)
-        .setImage(`${data.url}`)
+        .setImage(data.url)
         .setTimestamp());
     },
 };

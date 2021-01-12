@@ -21,7 +21,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
         .setDescription(`${message.author} Убил ${user}`)
-        .setImage(`${data.image}`)
+        .setImage(data.image)
         .setTimestamp());
     },
 };

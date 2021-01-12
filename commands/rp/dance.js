@@ -13,7 +13,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
             .setDescription(`${message.author} Танцует`)
-            .setImage(`${data.image}`)
+            .setImage(data.image)
             .setTimestamp());
     },
 };

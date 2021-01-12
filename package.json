@@ -12,7 +12,6 @@
   "dependencies": {
     "@k3rn31p4nic/google-translate-api": "^1.1.1",
     "alexflipnote.js": "^2.3.0",
-    "brawlstars": "^2.0.1",
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
     "discord-player": "^3.0.3",

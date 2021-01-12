@@ -2,12 +2,8 @@ const {
     Collection
 } = require('discord.js');
 const {
-    AlexFlipNoteKey,
-    BrawlstarsToken
+    AlexFlipNoteKey
 } = require('./config.json');
-const {
-    Client
-} = require("brawlstars");
 const {
     Player
 } = require("discord-player");
@@ -18,7 +14,6 @@ module.exports = (bot) => {
     bot.commands = new Collection();
     bot.cooldowns = new Collection();
     bot.aliases = new Collection();
-    bot.BS = new Client(BrawlstarsToken);
     bot.alexClient = new AlexClient(AlexFlipNoteKey);
 
     require("./utils/command")(bot);

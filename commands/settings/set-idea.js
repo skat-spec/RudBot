@@ -1,6 +1,7 @@
 const {
     error,
-    yes
+    yes,
+    setIdeaChannel
 } = require('../../utils/functions')
 const {
     Xaliks
@@ -23,7 +24,7 @@ module.exports = {
             !message.member.permissions.has(["MANAGE_GUILD"] &&
             !message.member.permissions.has(["ADMINISTRATOR"]))) return message.channel.send(error('У вас нет прав! (**Управлять сервером**)'))
         else {
-            message.guild.ideaChannel = channel.id
+            setIdeaChannel(message.guild.id, channel.id)
             message.channel.send(yes(`Канал установлен! (${channel})`))
         }
     }

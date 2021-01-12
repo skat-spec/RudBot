@@ -10,7 +10,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
         .setDescription(`${message.author} Выглядит самодовольно.`)
-        .setImage(`${data.url}`)
+        .setImage(data.url)
         .setTimestamp());
     },
 };

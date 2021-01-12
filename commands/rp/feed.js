@@ -21,7 +21,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
             .setDescription(`${message.author} кормит ${user}`)
-            .setImage(`${data.url}`)
+            .setImage(data.url)
             .setTimestamp());
     },
 };

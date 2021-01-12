@@ -1,7 +1,5 @@
 const {
-    Discord,
-    MessageEmbed,
-    MessageAttachment
+    MessageEmbed
 } = require('discord.js')
 const {
     emoji

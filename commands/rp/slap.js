@@ -20,7 +20,7 @@ module.exports = {
 
         message.channel.send(new MessageEmbed()
         .setDescription(`${message.author} даёт пощечину ${user}`)
-        .setImage(`${data.url}`)
+        .setImage(data.url)
         .setTimestamp());
     },
 };

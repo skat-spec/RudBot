@@ -3,7 +3,8 @@ const {
 } = require('discord.js');
 const {
     error,
-    time
+    time,
+    getServerPrefix
 } = require("../../utils/functions");
 
 module.exports = {
@@ -12,17 +13,16 @@ module.exports = {
     aliases: ['хелп', 'помощь', 'h'],
     usage: '[команда]',
     category: 'cmds',
-    async execute(message, args) {
+    async execute(message, args, bot) {
         const {
-            client,
             guild,
             channel,
             author
         } = message;
-        let {
+        const {
             commands
-        } = client
-        const prefix = await guild.prefix
+        } = bot
+        const prefix = await getServerPrefix(guild.id)
         const paginationEmbed = async (msg, pages, emojiList = ['◀️', '⏹️', '▶️']) => {
             let page = 0;
             const curPage = await msg.channel.send(pages[page].setFooter(`Страница ${page + 1}/${pages.length}`));
