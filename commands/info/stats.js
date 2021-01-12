@@ -9,7 +9,6 @@ const {
 const {
     Xaliks
 } = require('../../config.json')
-const db = require('quick.db')
 const {
     mem,
     cpu,
@@ -58,8 +57,6 @@ ${emoji.RAM}**Использование ОЗУ:** \`${usedMemMb.toFixed(0)}\`MB
 ${emoji.NodeJS}**Версия Node.js:** \`${process.version}\`
 ${emoji.DiscordJS}**Версия Discord.js:** \`${version}\`
 ${emoji.Linux}**Операционная система:** \`${await os.oos()} / ${os.arch()}\``)
-        .addField('Обратотка', `Обработано команд: \`${db.fetch('commands')}\`
-Прочтено сообщений: \`${db.fetch('messages')}\``)
         .addField('Пригласить меня', `[Пригласить меня на свой сервер](https://discord.com/api/oauth2/authorize?client_id=${bot.user.id}&permissions=8&scope=bot)`)
         .addField('Репозиторий', 'https://github.com/Xaliks/RudBot', true)
         .setFooter(`Аптайм: ${duration}`)

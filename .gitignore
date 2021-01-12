@@ -12,3 +12,10 @@ commands/botowner/pm2r.js
 
 data/bad.json
 config.json
+
+commands/Reputation
+commands/Marry
+commands/settings
+commands/cmds/идея.js
+commands/info/profile.js
+commands/botowner/blacklist.js
